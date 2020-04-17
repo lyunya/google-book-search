@@ -2,29 +2,13 @@ import React, { Component } from 'react';
 
 
 class SearchForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      printType: "",
-      bookType: null,
-      searchterm: "",
-    };
-  }
-
   setSearchTerm(event) {
     // event.preventDefault();
     this.setState({
       searchterm: event.target.value,
     });
   }
-
-  sendSearchTerm(event) {
-    event.preventDefault();
-    this.props.getSearchTerm(this.state.searchterm);
-  }
-
-  
-  
+ 
   render() {
     return (
       <>
@@ -38,7 +22,7 @@ class SearchForm extends Component {
               placeholder="Enter Search Term"
               onChange={this.props.setSearchTerm}
             />
-            <button type="submit" onClick={(e) => this.sendSearchTerm(e)}>
+            <button type="submit" onClick={(event) => this.props.bookSearch(event)}>
               Search
             </button>
           </form>
@@ -47,7 +31,7 @@ class SearchForm extends Component {
           <label htmlFor="book-type" name="book-type">
             Book Type:
           </label>
-          <select onChange={this.props.printFilter}>
+          <select onChange={this.props.bookType}>
             <option value="no-filter">None</option>
             <option value="free-ebooks">free-ebooks</option>
             <option value="paid-ebooks">paid-ebooks</option>
@@ -58,7 +42,7 @@ class SearchForm extends Component {
           <label htmlFor="print-type" name="print-type">
             Print Type:
           </label>
-          <select onChange={this.props.bookType}>
+          <select onChange={this.props.printFilter}>
             <option value="all">All</option>
             <option value="books">Books</option>
             <option value="magazines">Magazines</option>

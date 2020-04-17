@@ -11,40 +11,34 @@ class App extends Component {
       bookType: null,
       searchTerm: "",
       searchResults: [],
-      error: null,
+      error: null,      
     };
   }
-
-  searchURL = (search, printFilter, bookFilter) => {
-    const baseURL = 'https://www.googleapis.com/books/v1/volumes?key=AIzaSyC5YGvHPQecNAjy0Fy62DczIu_bkrSK3eI'
-    const URL = `${baseURL}q=${search}&filter=${printFilter}&printType=${bookFilter}`
-    return URL;
-  };
-
-  // url = searchURL(
-  //     this.state.searchTerm,
-  //     this.state.printType,
-  //     this.state.bookType
-  //   );
-
-
-  componentDidMount() {    
-    fetch(url)
+    bookSearch = (event) => {
+      event.preventDefault();
+    fetch(
+      `https://www.googleapis.com/books/v1/volumes?key=AIzaSyC5YGvHPQecNAjy0Fy62DczIu_bkrSK3eI&q=${this.state.searchTerm}&printType=${this.state.printType}&filter=${this.state.bookType}`
+    )
       .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          searchResults: data,
-          error: null,
-        });
-      })
-      .catch((err) => {
-        this.setState({
-          error: err.message,
-        });
+      .then(data => {
+        data.items.map(items => {
+        const bookInfo = {
+          title: items.volumeInfo.title,
+          author: items.volumeInfo.authors,
+          image: items.volumeInfo.imageLinks.smallThumbnail,
+          price: items.saleInfo.saleability,
+          description: items.volumeInfo.description
+        };
+        this.setState(
+          { searchResults: [...this.state.searchResults, bookInfo] }
+          );
+        return bookInfo        
+      })      
       });
-  };
+  }
 
-  setSearchTerm = e => {
+
+  setSearchTerm = e => {    
     let val = e.target.value
     this.setState({
       searchTerm: val,
@@ -78,16 +72,16 @@ class App extends Component {
         <header className="App-header">
           <h1>Google Book Search</h1>
           <SearchForm
-            getSearchTerm={this.getSearchTerm}
+            bookSearch={this.bookSearch}  
             setSearchTerm={this.setSearchTerm}
             printFilter={this.setPrintType}
             bookType={this.setBookType}
           />
-          <BookList />
+          <BookList books={this.state.searchResults} />
         </header>
       </div>
     );
   }
-}
 
+}
 export default App;
