@@ -3,15 +3,14 @@ import BookItem from './BookItem';
 
 class BookList extends Component{
     render(){
-        return(
-        <section>
+        return (
+          <section>
+            <h2> Book Results </h2>
             <ul>
-                {/* <BookItem /> */}
-                <h1> hello</h1>
-                {console.log(this.props.books)}
+              <BookItem books={this.props.books} />
             </ul>
-        </section>
-        )
+          </section>
+        );
     }
 }
 
